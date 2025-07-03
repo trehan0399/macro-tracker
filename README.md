@@ -4,7 +4,7 @@ A full-stack web app that makes tracking calories and protein effortless using A
 
 ## Project Status
 
-**🚧 Work in Progres. Some features may be incomplete or subject to change.**
+**🚧 Work in Progres. Some features may be incomplete or subject to change. 🚧**
 
 ## 🚀 Tech Stack & Functionality
 
