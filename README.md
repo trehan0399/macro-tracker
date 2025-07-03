@@ -1,6 +1,43 @@
 # Macro Tracker
 
-A full-stack web application for tracking macronutrients and calories with natural language input via chatbot.
+## Project Status
+
+**This project is currently a work in progress and is not yet finished or deployed. Some features may be incomplete or subject to change.**
+
+## 🚀 Tech Stack & Functionality
+
+**Full-Stack Web Application** built with modern technologies:
+
+### Frontend
+- **React.js** - Interactive user interface with component-based architecture
+- **Chart.js** - Data visualization and analytics dashboard
+- **Tailwind CSS** - Responsive, mobile-first design system
+- **Axios** - HTTP client for API communication
+
+### Backend
+- **Flask** - Python web framework for RESTful API development
+- **SQLite** - Lightweight database for data persistence
+- **SQLAlchemy** - Database ORM and query management
+
+### AI & External APIs
+- **OpenAI GPT** - Natural language processing for food input
+- **Nutritionix API** - Comprehensive food database integration
+
+### Key Features
+- **AI-Powered Chatbot** - Natural language food logging
+- **Real-time Data Visualization** - Weekly nutrition tracking charts
+- **Responsive Design** - Mobile and desktop optimized
+- **RESTful API** - Clean, scalable backend architecture
+
+## About This Project
+
+I built this macro tracker to solve a personal problem: I wanted a simple, intuitive way to track my nutrition without the complexity of existing apps. Most fitness apps require manual entry of every ingredient, which is time-consuming and often leads to giving up on tracking altogether.
+
+This project combines my interest in fitness with my passion for building practical, user-friendly applications. The AI chatbot feature was particularly exciting to implement - it allows users to simply type "I had 2 rotis and chana masala" and automatically extracts the nutritional information, making healthy eating tracking actually sustainable.
+
+## Future Plans
+
+I plan to deploy this application to the cloud (likely on platforms like Vercel, Railway, or Render) once the development phase is complete. The goal is to make it publicly accessible so others can benefit from the simplified nutrition tracking experience.
 
 ## Features
 
@@ -9,12 +46,6 @@ A full-stack web application for tracking macronutrients and calories with natur
 - **Data Visualization**: Chart.js graphs showing calories and protein over 7 days
 - **Maintenance Goals**: Set and track calorie targets
 - **Mobile Responsive**: Clean, minimalist UI with Tailwind CSS
-
-## Tech Stack
-
-- **Frontend**: React with Chart.js and Tailwind CSS
-- **Backend**: Flask with SQLite database
-- **APIs**: OpenAI GPT for natural language processing, Nutritionix for food data
 
 ## Setup Instructions
 
