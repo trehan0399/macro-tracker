@@ -1,9 +1,10 @@
 # Macro Tracker
 
-## Project Status
-## 🚧 Work in Progres
+A full-stack web app that makes tracking calories and protein effortless using AI, natural language input, and real-time visualizations.
 
-**This project is currently a work in progress and is not yet finished or deployed. Some features may be incomplete or subject to change.**
+## Project Status
+
+**🚧 Work in Progres. Some features may be incomplete or subject to change.**
 
 ## 🚀 Tech Stack & Functionality
 
