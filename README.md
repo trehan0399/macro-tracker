@@ -31,9 +31,9 @@
 
 ## About This Project
 
-I built this macro tracker to solve a personal problem: I wanted a simple, intuitive way to track my nutrition without the complexity of existing apps. Most fitness apps require manual entry of every ingredient, which is time-consuming and often leads to giving up on tracking altogether.
+I built this macro tracker to solve a personal problem I faced while tracking my nutrition. Most existing apps are cluttered, locked behind paywalls for basic features like photo logging or chatbots, and require tedious manual entry of every ingredient. This becomes especially frustrating when you're eating something without a nutrition label, making tracking feel like more work than it’s worth. As a result, I often found myself giving up on my weight loss journey altogether.
 
-This project combines my interest in fitness with my passion for building practical, user-friendly applications. The AI chatbot feature was particularly exciting to implement - it allows users to simply type "I had 2 rotis and chana masala" and automatically extracts the nutritional information, making healthy eating tracking actually sustainable.
+This project brings together my passion for fitness, my personal goal of losing weight, and my drive to build practical, user-friendly tools. I was especially excited to implement the AI chatbot, which allows users to simply type something like “I had 2 rotis and chana masala,” then automatically pulls the nutritional information and logs it. By removing friction and simplifying the process, this tool makes healthy eating more sustainable and aims to help others overcome the same challenges I faced in tracking macros and reaching a healthier lifestyle.
 
 ## Future Plans
 
@@ -41,7 +41,7 @@ I plan to deploy this application to the cloud (likely on platforms like Vercel,
 
 ## Features
 
-- **Manual Food Entry**: Add meals with food name, calories, protein, carbs, fat, and date
+- **Manual Food Entry**: Add meals with food name, calories, protein, and date (carbs and fats will come soon, I normally priortize calories and protein hence why only those are tracked for now)
 - **AI-Powered Chatbot**: Natural language food logging using OpenAI and Nutritionix APIs
 - **Data Visualization**: Chart.js graphs showing calories and protein over 7 days
 - **Maintenance Goals**: Set and track calorie targets
