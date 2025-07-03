@@ -1,6 +1,7 @@
 # Macro Tracker
 
 ## Project Status
+## 🚧 Work in Progres
 
 **This project is currently a work in progress and is not yet finished or deployed. Some features may be incomplete or subject to change.**
 
@@ -23,31 +24,25 @@
 - **OpenAI GPT** - Natural language processing for food input
 - **Nutritionix API** - Comprehensive food database integration
 
-### Key Features
-- **AI-Powered Chatbot** - Natural language food logging
-- **Real-time Data Visualization** - Weekly nutrition tracking charts
-- **Responsive Design** - Mobile and desktop optimized
-- **RESTful API** - Clean, scalable backend architecture
-
 ## About This Project
 
 I built this macro tracker to solve a personal problem I faced while tracking my nutrition. Most existing apps are cluttered, locked behind paywalls for basic features like photo logging or chatbots, and require tedious manual entry of every ingredient. This becomes especially frustrating when you're eating something without a nutrition label, making tracking feel like more work than it’s worth. As a result, I often found myself giving up on my weight loss journey altogether.
 
-This project brings together my passion for fitness, my personal goal of losing weight, and my drive to build practical, user-friendly tools. I was especially excited to implement the AI chatbot, which allows users to simply type something like “I had 2 rotis and chana masala,” then automatically pulls the nutritional information and logs it. By removing friction and simplifying the process, this tool makes healthy eating more sustainable and aims to help others overcome the same challenges I faced in tracking macros and reaching a healthier lifestyle.
+This project brings together my passion for fitness, my personal goal of losing weight, and my drive to build practical, user-friendly tools. I was especially excited to implement the AI chatbot, which allows users to simply type something like “I had 2 rotis and chana masala,” then automatically pulls the nutritional information and logs it. By removing friction and simplifying the process, this tool makes healthy eating more sustainable and aims to help others overcome the same challenges I faced in tracking macros and building a healthier lifestyle.
 
 ## Future Plans
 
 I plan to deploy this application to the cloud (likely on platforms like Vercel, Railway, or Render) once the development phase is complete. The goal is to make it publicly accessible so others can benefit from the simplified nutrition tracking experience.
 
-## Features
+## 🔑 Key Features
 
-- **Manual Food Entry**: Add meals with food name, calories, protein, and date (carbs and fats will come soon, I normally priortize calories and protein hence why only those are tracked for now)
+- **Manual Food Entry**: Add meals with food name, calories, protein, and date (carbs and fats will be added soon. For now, I’m focusing on calories and protein, which I personally prioritize for weight loss.)
 - **AI-Powered Chatbot**: Natural language food logging using OpenAI and Nutritionix APIs
 - **Data Visualization**: Chart.js graphs showing calories and protein over 7 days
 - **Maintenance Goals**: Set and track calorie targets
 - **Mobile Responsive**: Clean, minimalist UI with Tailwind CSS
 
-## Setup Instructions
+## 🛠️ Setup Instructions (For Early Users & Local Testing)
 
 ### Prerequisites
 - Python 3.8+
@@ -169,40 +164,6 @@ macrotracker/
 │   └── tailwind.config.js  # Tailwind CSS configuration
 └── README.md
 ```
-
-## Features in Detail
-
-### Manual Food Entry
-- Form with all required nutrition fields
-- Date selection for historical entries
-- Validation and error handling
-- Success/error feedback
-
-### AI Chatbot
-- Natural language processing with OpenAI GPT
-- Automatic food item and quantity extraction
-- Nutrition data lookup via Nutritionix API
-- Detailed breakdown of logged items
-- Automatic database storage
-
-### Data Visualization
-- Chart.js line charts for weekly overview
-- Dual-axis display (calories on left, protein on right)
-- Maintenance calorie reference line
-- Interactive tooltips and hover effects
-- Summary statistics cards
-
-### Food Logs Management
-- Chronological display grouped by date
-- Daily nutrition totals
-- Date filtering capability
-- Delete functionality with confirmation
-- Mobile-responsive design
-
-### Settings
-- Maintenance calorie target management
-- App information and tips
-- User guidance for better tracking
 
 ## Development
 
