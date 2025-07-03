@@ -2,10 +2,6 @@
 
 A full-stack web app that makes tracking calories and protein effortless using AI, natural language input, and real-time visualizations.
 
-## Project Status
-
-**🚧 Work in Progres. Some features may be incomplete or subject to change. 🚧**
-
 ## 🚀 Tech Stack & Functionality
 
 **Full-Stack Web Application** built with modern technologies:
@@ -31,9 +27,14 @@ I built this macro tracker to solve a personal problem I faced while tracking my
 
 This project brings together my passion for fitness, my personal goal of losing weight, and my drive to build practical, user-friendly tools. I was especially excited to implement the AI chatbot, which allows users to simply type something like “I had 2 rotis and chana masala,” then automatically pulls the nutritional information and logs it. By removing friction and simplifying the process, this tool makes healthy eating more sustainable and aims to help others overcome the same challenges I faced in tracking macros and building a healthier lifestyle.
 
-## Future Plans
+## 🧪 Future Plans
 
-I plan to deploy this application to the cloud (likely on platforms like Vercel, Railway, or Render) once the development phase is complete. The goal is to make it publicly accessible so others can benefit from the simplified nutrition tracking experience.
+This macro tracker is fully functional, with key features like AI-powered meal logging, manual entry, and real-time nutrition charts. Upcoming enhancements I plan to include:
+
+- Deploying the app to platforms like Vercel or Render
+- Adding support for tracking carbs, fats, and fiber
+- Improving UI/UX for a more polished user experience
+- Optional user accounts for personalized logging
 
 ## 🔑 Key Features
 
