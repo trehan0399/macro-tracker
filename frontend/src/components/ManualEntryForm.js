@@ -19,14 +19,9 @@ const ManualEntryForm = ({ onAddLog }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'date' && value) {
-      const dateObj = new Date(value);
-      const year = dateObj.getFullYear();
-      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const day = String(dateObj.getDate()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
       setFormData(prev => ({
         ...prev,
-        [name]: formattedDate
+        [name]: value
       }));
     } else {
       setFormData(prev => ({
@@ -52,7 +47,6 @@ const ManualEntryForm = ({ onAddLog }) => {
         calories: parseFloat(formData.calories),
         protein: parseFloat(formData.protein)
       };
-      console.log('Sending date to backend:', logData.date);
       await onAddLog(logData);
       setFormData({
         food_name: '',

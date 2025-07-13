@@ -10,48 +10,54 @@ const Chatbot = ({ onChatResponse }) => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputMessage.trim() || loading) return;
+    
     const userMessage = inputMessage.trim();
     setInputMessage('');
     setLoading(true);
+    
     const newUserMessage = {
       id: Date.now(),
       type: 'user',
       content: userMessage
     };
     setMessages(prev => [...prev, newUserMessage]);
+    
     try {
       const response = await onChatResponse(userMessage);
-      if (response.needs_clarification) {
-        const clarificationMessage = {
+      let botMessage;
+      
+      if (response && response.needs_clarification) {
+        botMessage = {
           id: Date.now() + 1,
           type: 'bot',
           content: `I'm not sure what you mean by "${userMessage}". Could you be more specific? Here are some suggestions:`,
           suggestions: response.suggestions,
           needsClarification: true
         };
-        setMessages(prev => [...prev, clarificationMessage]);
-      } else {
-        const botMessage = {
+      } else if (response && response.summary) {
+        botMessage = {
           id: Date.now() + 1,
           type: 'bot',
           content: response.summary,
           details: response.details
         };
-        setMessages(prev => [...prev, botMessage]);
+      } else {
+        botMessage = {
+          id: Date.now() + 1,
+          type: 'bot',
+          content: 'I processed your request, but there was an issue with the response format.',
+          isError: true
+        };
       }
+      setMessages(prev => {
+        const updated = [...prev, botMessage];
+        return updated;
+      });
+      
     } catch (error) {
       const errorMessage = {
         id: Date.now() + 1,
@@ -128,7 +134,6 @@ const Chatbot = ({ onChatResponse }) => {
             </div>
           </div>
         )}
-        <div ref={messagesEndRef} />
       </div>
       <div className="bg-white border-t border-gray-200 p-4 rounded-b-lg">
         <form onSubmit={handleSubmit} className="flex space-x-2">

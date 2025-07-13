@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import datetime
 
 def init_db():
     """Initialize the SQLite database with the required tables."""
@@ -11,7 +12,7 @@ def init_db():
     conn = sqlite3.connect('data/macro_tracker.db')
     cursor = conn.cursor()
     
-    # Create food_logs table with only calories and protein
+    # Create food_logs table with local timestamp
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS food_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +20,7 @@ def init_db():
             calories REAL NOT NULL,
             protein REAL NOT NULL,
             date TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TEXT DEFAULT (datetime('now', 'localtime'))
         )
     ''')
     
@@ -28,7 +29,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS settings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             maintenance_calories INTEGER DEFAULT 2000,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TEXT DEFAULT (datetime('now', 'localtime'))
         )
     ''')
     

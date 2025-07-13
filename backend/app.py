@@ -8,29 +8,24 @@ from dotenv import load_dotenv
 import openai
 import requests
 
-# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configure OpenAI
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-# Nutritionix API configuration
 NUTRITIONIX_APP_ID = os.getenv('NUTRITIONIX_APP_ID')
 NUTRITIONIX_APP_KEY = os.getenv('NUTRITIONIX_APP_KEY')
 NUTRITIONIX_BASE_URL = "https://trackapi.nutritionix.com/v2"
 
 def get_db_connection():
-    """Create a database connection."""
     conn = sqlite3.connect('data/macro_tracker.db')
     conn.row_factory = sqlite3.Row
     return conn
 
 @app.route('/api/logs', methods=['GET'])
 def get_logs():
-    """Get all food logs, optionally filtered by date."""
     try:
         date_filter = request.args.get('date')
         
@@ -52,7 +47,6 @@ def get_logs():
         logs = cursor.fetchall()
         conn.close()
         
-        # Convert to list of dictionaries
         logs_list = []
         for log in logs:
             logs_list.append({
@@ -71,7 +65,6 @@ def get_logs():
 
 @app.route('/api/logs', methods=['POST'])
 def add_log():
-    """Add a new food log."""
     try:
         data = request.get_json()
         
@@ -84,13 +77,13 @@ def add_log():
         cursor = conn.cursor()
         
         cursor.execute('''
-            INSERT INTO food_logs (food_name, calories, protein, date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO food_logs (food_name, calories, protein, date, created_at)
+            VALUES (?, ?, ?, ?, datetime('now', 'localtime'))
         ''', (
             data['food_name'],
             data['calories'],
             data['protein'],
-            data['date']  # Store the date exactly as received from frontend
+            data['date']
         ))
         
         log_id = cursor.lastrowid
@@ -104,7 +97,6 @@ def add_log():
 
 @app.route('/api/logs/<int:log_id>', methods=['DELETE'])
 def delete_log(log_id):
-    """Delete a food log by ID."""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -125,7 +117,6 @@ def delete_log(log_id):
 
 @app.route('/api/logs', methods=['DELETE'])
 def clear_all_logs():
-    """Delete all food logs."""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -143,25 +134,17 @@ def clear_all_logs():
 
 @app.route('/api/chat', methods=['POST'])
 def process_chat():
-    """Process chatbot input using OpenAI and Nutritionix APIs."""
     try:
         data = request.get_json()
         user_input = data.get('message', '').strip()
-        
         if not user_input:
             return jsonify({'error': 'Message is required'}), 400
-        
-        # Step 1: Use OpenAI to extract food items and quantities
         food_items = extract_food_items(user_input)
-        
         if not food_items:
-            # If no food items found, ask for clarification
             clarification_prompt = f"""
             The user said: "{user_input}"
-            
             This input seems vague or unclear. Please suggest what specific food items they might be referring to.
             Return a JSON object with 'needs_clarification' set to true and 'suggestions' as an array of possible foods.
-            
             Example:
             {{"needs_clarification": true, "suggestions": ["chicken breast", "rice", "vegetables"]}}
             """
@@ -185,12 +168,13 @@ def process_chat():
                     content = content[:-3]
                 
                 clarification = json.loads(content)
+                if 'needs_clarification' in clarification:
+                    clarification['needs_clarification'] = bool(clarification['needs_clarification'])
                 return jsonify(clarification)
                 
             except Exception as e:
                 return jsonify({'error': 'Could not understand your input. Please be more specific about what you ate.'}), 400
         
-        # Step 2: Get nutritional data from Nutritionix
         total_calories = 0
         total_protein = 0
         food_details = []
@@ -209,16 +193,15 @@ def process_chat():
                     'protein': nutrition_data['protein']
                 })
         
-        # Step 3: Store in database
-        today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        today = datetime.now().strftime('%Y-%m-%d')
         conn = get_db_connection()
         cursor = conn.cursor()
         
         for detail in food_details:
             food_name = f"{detail['measurement']} {detail['food']}" if detail['measurement'] else f"{detail['quantity']} {detail['food']}"
             cursor.execute('''
-                INSERT INTO food_logs (food_name, calories, protein, date)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO food_logs (food_name, calories, protein, date, created_at)
+                VALUES (?, ?, ?, ?, datetime('now', 'localtime'))
             ''', (
                 food_name,
                 detail['calories'],
@@ -229,23 +212,23 @@ def process_chat():
         conn.commit()
         conn.close()
         
-        # Step 4: Return summary with measurement info
         summary = f"{total_calories:.0f} calories, {total_protein:.1f}g protein"
         
-        return jsonify({
+        response_data = {
             'summary': summary,
             'details': food_details,
             'totals': {
                 'calories': total_calories,
                 'protein': total_protein
             }
-        })
+        }
+        
+        return jsonify(response_data)
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 def extract_food_items(user_input):
-    """Use OpenAI to extract food items and quantities from user input."""
     try:
         prompt = f"""
         Extract food items and their quantities from this text: "{user_input}"
@@ -290,7 +273,6 @@ def extract_food_items(user_input):
         )
         
         content = response.choices[0].message.content.strip()
-        # Clean up the response to ensure it's valid JSON
         if content.startswith('```json'):
             content = content[7:]
         if content.endswith('```'):
@@ -300,11 +282,9 @@ def extract_food_items(user_input):
         return food_items
     
     except Exception as e:
-        print(f"Error extracting food items: {e}")
         return []
 
 def get_nutrition_data(food_name, quantity, measurement=None):
-    """Get nutritional data from Nutritionix API."""
     try:
         headers = {
             'x-app-id': NUTRITIONIX_APP_ID,
@@ -313,7 +293,6 @@ def get_nutrition_data(food_name, quantity, measurement=None):
             'Content-Type': 'application/json'
         }
         
-        # Search for the food
         search_url = f"{NUTRITIONIX_BASE_URL}/search/instant"
         search_params = {
             'query': food_name,
@@ -328,20 +307,16 @@ def get_nutrition_data(food_name, quantity, measurement=None):
         if not results.get('common') and not results.get('branded'):
             return None
         
-        # Get the first result
         food_item = results.get('common', [])[0] if results.get('common') else results.get('branded', [])[0]
         
-        # Build the query with measurement if available
         if measurement:
             query = f"{measurement} {food_name}"
         else:
-            # Convert quantity to a reasonable measurement
             if quantity >= 100:
                 query = f"{quantity}g {food_name}"
             else:
                 query = f"{quantity} {food_name}"
         
-        # Get detailed nutrition info
         nutrition_url = f"{NUTRITIONIX_BASE_URL}/natural/nutrients"
         nutrition_data = {
             'query': query
@@ -364,12 +339,10 @@ def get_nutrition_data(food_name, quantity, measurement=None):
         }
     
     except Exception as e:
-        print(f"Error getting nutrition data for {food_name}: {e}")
         return None
 
 @app.route('/api/settings/maintenance-calories', methods=['GET'])
 def get_maintenance_calories():
-    """Get the current maintenance calorie target."""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -381,14 +354,13 @@ def get_maintenance_calories():
         if result:
             return jsonify({'maintenance_calories': result['maintenance_calories']})
         else:
-            return jsonify({'maintenance_calories': 2000})  # Default value
+            return jsonify({'maintenance_calories': 2000})
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/settings/maintenance-calories', methods=['POST'])
 def update_maintenance_calories():
-    """Update the maintenance calorie target."""
     try:
         data = request.get_json()
         calories = data.get('maintenance_calories')
@@ -401,7 +373,7 @@ def update_maintenance_calories():
         
         cursor.execute('''
             UPDATE settings 
-            SET maintenance_calories = ?, updated_at = CURRENT_TIMESTAMP 
+            SET maintenance_calories = ?, updated_at = datetime('now', 'localtime')
             WHERE id = 1
         ''', (calories,))
         
@@ -415,18 +387,15 @@ def update_maintenance_calories():
 
 @app.route('/api/stats/weekly', methods=['GET'])
 def get_weekly_stats():
-    """Get weekly calorie statistics for the chart."""
     try:
-        # Get the last 7 days
-        end_date = datetime.now(timezone.utc)
-        start_date = end_date - timedelta(days=6)
-        
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=6)
+        
         cursor.execute('''
-            SELECT date, 
-                   SUM(calories) as total_calories
+            SELECT date, SUM(calories) as total_calories, SUM(protein) as total_protein
             FROM food_logs 
             WHERE date BETWEEN ? AND ?
             GROUP BY date
@@ -436,25 +405,24 @@ def get_weekly_stats():
         results = cursor.fetchall()
         conn.close()
         
-        # Create a complete 7-day dataset
         stats = []
         current_date = start_date
         
-        for i in range(7):
+        while current_date <= end_date:
             date_str = current_date.strftime('%Y-%m-%d')
-            
-            # Find if we have data for this date
             day_data = next((row for row in results if row['date'] == date_str), None)
             
             if day_data:
                 stats.append({
                     'date': date_str,
-                    'calories': day_data['total_calories']
+                    'calories': day_data['total_calories'],
+                    'protein': day_data['total_protein']
                 })
             else:
                 stats.append({
                     'date': date_str,
-                    'calories': 0
+                    'calories': 0,
+                    'protein': 0
                 })
             
             current_date += timedelta(days=1)
@@ -465,9 +433,6 @@ def get_weekly_stats():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    # Ensure database exists
-    if not os.path.exists('data/macro_tracker.db'):
-        from init_db import init_db
-        init_db()
-    
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    import init_db
+    init_db.init_db()
+    app.run(debug=True) 
